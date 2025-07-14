@@ -1,131 +1,59 @@
-
-
 # RHSFELLOWSHIP-MANAGER-SYSTEM
 
-## Empowering Fellowship Growth Through Seamless Management
+**Empowering Fellowship Growth Through Seamless Management**
 
-> 🕒 last commit: July   |   📘 typescript: 97.6%   |   🌐 languages: 4
+> 🕒 last commit: July &nbsp;&nbsp;|&nbsp;&nbsp; 📘 typescript: 97.6% &nbsp;&nbsp;|&nbsp;&nbsp; 🌐 languages: 4
 
+**Built with the tools and technologies:**
 
-
-Built with the tools and technologies:
-
-JSON Markdown npm Autoprefixer PostCSS JavaScript React
-TypeScript Zod Vite ESLint dateFns React Hook Form
-
+`JSON` `Markdown` `npm` `Autoprefixer` `PostCSS` `JavaScript` `React`  
+`TypeScript` `Zod` `Vite` `ESLint` `dateFns` `React Hook Form`
 
 ---
 
-Table of Contents
+## Table of Contents
 
-Overview
-
-Getting Started
-
-Prerequisites
-
-Installation
-
-
-Usage
-
-Testing
-
-
+- [Overview](#overview)  
+- [Getting Started](#getting-started)  
+  - [Prerequisites](#prerequisites)  
+  - [Installation](#installation)  
+- [Usage](#usage)  
+- [Testing](#testing)
 
 ---
 
-Overview
+## Overview
 
-rhsfellowship-manager-system is a modern, React-based frontend framework tailored for managing fellowship activities and member data. It combines a rich set of UI components, flexible configurations, and best practices in accessibility and responsiveness to deliver a seamless administrative experience.
+**rhsfellowship-manager-system** is a modern, React-based frontend framework tailored for managing fellowship activities and member data. It combines a rich set of UI components, flexible configurations, and best practices in accessibility and responsiveness to deliver a seamless administrative experience.
 
-Why rhsfellowship-manager-system?
+### Why rhsfellowship-manager-system?
 
 This project empowers developers to build scalable, maintainable, and user-friendly fellowship management tools. The core features include:
 
-🎨 [Colorful Palette] UI Component Library: A comprehensive collection of accessible, customizable React components built with Radix UI and Tailwind CSS.
-
-⚙️ [Gear] Configurable Architecture: Flexible build and styling configurations using Vite, TypeScript, and PostCSS for optimized development workflows.
-
-📊 [Bar Chart] Data Visualization: Integrated chart components for insightful reporting and analytics.
-
-🔒 [Lock] Secure and Accessible: Focus on accessibility standards and secure user authentication flows.
-
-🚀 [Rocket] Fast Development: Modern tooling and modular design to accelerate feature development and iteration.
-
-
+- 🎨 **UI Component Library**: A comprehensive collection of accessible, customizable React components built with Radix UI and Tailwind CSS.  
+- ⚙️ **Configurable Architecture**: Flexible build and styling configurations using Vite, TypeScript, and PostCSS for optimized development workflows.  
+- 📊 **Data Visualization**: Integrated chart components for insightful reporting and analytics.  
+- 🔒 **Secure and Accessible**: Focus on accessibility standards and secure user authentication flows.  
+- 🚀 **Fast Development**: Modern tooling and modular design to accelerate feature development and iteration.
 
 ---
 
-Getting Started
+## Getting Started
 
-Prerequisites
+### Prerequisites
 
 This project requires the following dependencies:
 
-Programming Language: TypeScript
-
-Package Manager: npm
-
-
+- **Programming Language**: TypeScript  
+- **Package Manager**: npm
 
 ---
 
-Installation
+### Installation
 
-Build rhsfellowship-manager-system from the source and install dependencies:
+Build `rhsfellowship-manager-system` from the source and install dependencies:
 
-1. Clone the repository:
+1. **Clone the repository:**
 
-
-
+```bash
 git clone https://github.com/Goddy-2024/rhsfellowship-manager-system
-
-2. Navigate to the project directory:
-
-
-
-cd rhsfellowship-manager-system
-
-3. Install the dependencies:
-
-
-
-Using npm:
-
-npm install
-
-
----
-
-Usage
-
-To start the development server:
-
-npm run dev
-
-This will spin up the application on the local development server (usually http://localhost:5173/ if using Vite).
-You can now view and interact with the fellowship management UI in your browser.
-
-
----
-
-Testing
-
-To run tests (if available/test suite implemented):
-
-npm run test
-
-Lint your codebase using ESLint:
-
-npm run lint
-
-Build the project for production:
-
-npm run build
-
-
----
-
-If you'd like this saved into a .md file or added to your GitHub repo, nikuassist aje!
-
