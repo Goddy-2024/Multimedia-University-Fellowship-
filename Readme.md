@@ -3,7 +3,8 @@
 **Empowering Fellowship Growth Through Seamless Management**
 
 > 🕒 last commit: July &nbsp;&nbsp;|&nbsp;&nbsp; 📘 typescript: 97.6% &nbsp;&nbsp;|&nbsp;&nbsp; 🌐 languages: 4
-> Live Demo: https://finalmmurhsfdb.netlify.app/
+> Live Demo(test): https://finalmmurhsfdb.netlify.app/
+> Live project: https://mmuful.netlify.app/dashboard(username: admin password: rhsf: 2024)
 
 **Built with the tools and technologies:**
 
