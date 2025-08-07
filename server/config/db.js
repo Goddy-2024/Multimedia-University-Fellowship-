@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 export default async function connectDB(){
       try{
-            const mongoUri = process.env.MONGODB_URI || 'mongodb+srv://gaoajuoga:tq7CN60C5VaTHNIB@cluster0.axn0rap.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+            const mongoUri = process.env.MONGODB_URI;
             await mongoose.connect(mongoUri);
             console.log(`MongoDB integration success !!!`);
             console.log(`connected to client: ${process.env.CLIENT_URL || 'http://localhost:5174'}`);
