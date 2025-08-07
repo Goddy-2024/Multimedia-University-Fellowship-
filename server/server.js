@@ -24,7 +24,7 @@ if (!process.env.JWT_SECRET) {
 if (!process.env.CLIENT_URL) {
   if (process.env.NODE_ENV === 'production') {
     // In production, use the actual frontend URL
-    process.env.CLIENT_URL = process.env.FRONTEND_URL || 'https://your-frontend-domain.vercel.app';
+    process.env.CLIENT_URL = process.env.FRONTEND_URL || 'https://multimedia-university-fellowship-b3y86bzvg-goddy-2024s-projects.vercel.app/';
   } else {
     // In development, use localhost
     process.env.CLIENT_URL = 'http://localhost:5174';
