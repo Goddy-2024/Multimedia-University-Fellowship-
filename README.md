@@ -62,7 +62,7 @@ PORT=5000
 NODE_ENV=development
 
 # Frontend URL (for CORS)
-CLIENT_URL=http://localhost:5173
+CLIENT_URL=http://localhost:5174
 ```
 
 ### 3. Database Setup
@@ -111,7 +111,7 @@ npm run dev
 
 ### 6. Access the Application
 
-- Frontend: http://localhost:5173
+- Frontend: http://localhost:5174
 - Backend API: http://localhost:5000/api
 - Login with: `admin` / `rhsf2024`
 
@@ -191,12 +191,56 @@ fellowship-management/
 
 ## Production Deployment
 
-1. Set `NODE_ENV=production` in server environment
-2. Use a strong JWT secret
-3. Configure MongoDB Atlas or production database
-4. Set up proper CORS origins
-5. Use HTTPS in production
-6. Consider using PM2 for process management
+### Vercel Frontend Deployment
+
+1. **Deploy to Vercel**:
+   ```bash
+   npm install -g vercel
+   vercel
+   ```
+
+2. **Set Environment Variables in Vercel Dashboard**:
+   - `VITE_API_URL`: Your backend API URL
+   - Example: `https://your-backend-api.herokuapp.com/api`
+
+### Backend Deployment (Heroku/Railway/Render)
+
+1. **Deploy your backend** to your preferred platform
+2. **Set Environment Variables**:
+   ```env
+   NODE_ENV=production
+   JWT_SECRET=your-strong-jwt-secret
+   MONGODB_URI=your-mongodb-atlas-connection-string
+   CLIENT_URL=https://your-frontend-app.vercel.app
+   FRONTEND_URL=https://your-frontend-app.vercel.app
+   ```
+
+### Environment Configuration
+
+**Frontend (Vercel)**:
+- `VITE_API_URL`: Backend API URL
+
+**Backend (Production)**:
+- `NODE_ENV=production`
+- `JWT_SECRET`: Strong secret key
+- `MONGODB_URI`: Production database URL
+- `CLIENT_URL`: Frontend Vercel URL
+- `FRONTEND_URL`: Frontend Vercel URL
+
+### Registration Link Fix
+
+The registration links are now dynamically generated based on the environment:
+- **Development**: `http://localhost:5174/register/{formId}`
+- **Production**: `https://your-frontend-app.vercel.app/register/{formId}`
+
+### Security Checklist
+
+1. ✅ Set `NODE_ENV=production`
+2. ✅ Use a strong JWT secret
+3. ✅ Configure MongoDB Atlas or production database
+4. ✅ Set up proper CORS origins
+5. ✅ Use HTTPS in production
+6. ✅ Consider using PM2 for process management
 
 ## Troubleshooting
 

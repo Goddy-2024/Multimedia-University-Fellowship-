@@ -51,7 +51,7 @@ const registrationFormSchema = new mongoose.Schema({
 
 // Generate form URL
 registrationFormSchema.virtual('formUrl').get(function() {
-  return `${process.env.FRONTEND_URL || 'http://localhost:3000'}/register/${this.formId}`;
+  return `${process.env.CLIENT_URL || 'http://localhost:5174'}/register/${this.formId}`;
 });
 
 // Check if form is expired

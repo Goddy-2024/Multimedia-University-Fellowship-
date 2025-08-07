@@ -22,7 +22,13 @@ if (!process.env.JWT_SECRET) {
   process.env.JWT_SECRET = 'your-super-secret-jwt-key-change-this-in-production';
 }
 if (!process.env.CLIENT_URL) {
-  process.env.CLIENT_URL = 'http://localhost:5173';
+  if (process.env.NODE_ENV === 'production') {
+    // In production, use the actual frontend URL
+    process.env.CLIENT_URL = process.env.FRONTEND_URL || 'https://your-frontend-domain.vercel.app';
+  } else {
+    // In development, use localhost
+    process.env.CLIENT_URL = 'http://localhost:5174';
+  }
 }
 
 const app = express();
