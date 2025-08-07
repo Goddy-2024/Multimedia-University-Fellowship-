@@ -19,7 +19,8 @@ dotenv.config();
 
 // Set default environment variables for development
 if (!process.env.JWT_SECRET) {
-  process.env.JWT_SECRET = 'your-super-secret-jwt-key-change-this-in-production';
+  process.env.JWT_SECRET = '3d026172d704581d0f4179d6d2e346c089e05362e109c03c94ff83c1607db62da5c50609cdbf2287797f63453738a9dc094d67deaadd230537c83208219bc8f1
+';
 }
 if (!process.env.CLIENT_URL) {
   if (process.env.NODE_ENV === 'production') {
