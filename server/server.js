@@ -24,7 +24,7 @@ if (!process.env.JWT_SECRET) {
 if (!process.env.CLIENT_URL) {
   if (process.env.NODE_ENV === 'production') {
     // In production, use the actual frontend URL
-    process.env.CLIENT_URL = process.env.FRONTEND_URL || 'https://multimedia-university-fellowship-b3y86bzvg-goddy-2024s-projects.vercel.app/';
+    process.env.CLIENT_URL = process.env.FRONTEND_URL || 'https://multimedia-university-fellowship-batoc0km9-goddy-2024s-projects.vercel.app/';
   } else {
     // In development, use localhost
     process.env.CLIENT_URL = 'http://localhost:5174';
@@ -47,7 +47,7 @@ app.use(limiter);
 
 // CORS configuration
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'https://multimedia-university-fellowship-b3y86bzvg-goddy-2024s-projects.vercel.app/',
+  origin: process.env.CLIENT_URL || 'https://multimedia-university-fellowship-batoc0km9-goddy-2024s-projects.vercel.app/',
   credentials: true 
 }));
 
