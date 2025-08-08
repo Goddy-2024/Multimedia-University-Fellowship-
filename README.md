@@ -111,8 +111,8 @@ npm run dev
 
 ### 6. Access the Application
 
-- Frontend: http://localhost:5174
-- Backend API: http://localhost:5000/api
+- Frontend: (https://multimedia-university-fellowship.vercel.app/)
+- Backend API: http:///api
 - Login with: `admin` / `rhsf2024`
 
 ## API Endpoints
