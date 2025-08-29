@@ -4,12 +4,14 @@ import { X } from 'lucide-react';
 // Define the expected shape of event data
 interface EventData {
   name: string;
-  description: string;
   date: string;
   time: string;
   location: string;
   type: string;
-  expectedAttendees: number;
+  attendeesCount: number;
+  visitorsCount: number;
+  speakers: string;
+  description: string;
   status: string;
 }
 
@@ -20,45 +22,52 @@ interface AddEventModalProps {
 }
 
 const AddEventModal: React.FC<AddEventModalProps> = ({ isOpen, onClose, onSubmit }) => {
-  const [formData, setFormData] = useState<Omit<EventData, 'expectedAttendees'> & { expectedAttendees: string }>({
+  const [formData, setFormData] = useState<
+    Omit<EventData, 'attendeesCount' | 'visitorsCount'> & { attendeesCount: string; visitorsCount: string }
+  >({
     name: '',
-    description: '',
     date: '',
     time: '',
     location: '',
     type: '',
-    expectedAttendees: '',
-    status: 'Planning',
+    attendeesCount: '',
+    visitorsCount: '',
+    description: '',
+    speakers: '',
+    status: 'Completed',
   });
 
   const eventTypes = [
-    'Service',
-    'Study',
-    'Conference',
-    'Meeting',
     'Outreach',
-    'Social',
-    'Training',
+    'Service',
+    "Worship",
+    'Fellowship',
+    'Bible Study',
+    'Repentance',
   ];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const finalData: EventData = {
       ...formData,
-      expectedAttendees: parseInt(formData.expectedAttendees) || 0,
+      attendeesCount: parseInt(formData.attendeesCount) || 0,
+      visitorsCount: parseInt(formData.visitorsCount) || 0,
+      status: 'Completed',
     };
     onSubmit(finalData);
 
     // Reset the form
     setFormData({
       name: '',
-      description: '',
       date: '',
       time: '',
       location: '',
       type: '',
-      expectedAttendees: '',
-      status: 'Planning',
+      attendeesCount: '',
+      visitorsCount: '',
+      description: '',
+      speakers: '',
+      status: 'Completed',
     });
     onClose();
   };
@@ -177,33 +186,67 @@ const AddEventModal: React.FC<AddEventModalProps> = ({ isOpen, onClose, onSubmit
           </div>
 
           <div>
-            <label htmlFor="expectedAttendees" className="block text-sm font-medium text-gray-700 mb-2">
-              Expected Attendees
+            <label htmlFor="attendeesCount" className="block text-sm font-medium text-gray-700 mb-2">
+              Number of Attendees
             </label>
             <input
               type="number"
-              id="expectedAttendees"
-              name="expectedAttendees"
-              value={formData.expectedAttendees}
+              id="attendeesCount"
+              name="attendeesCount"
+              value={formData.attendeesCount}
               onChange={handleChange}
               placeholder="0"
               min="0"
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              required
             />
           </div>
 
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="visitorsCount" className="block text-sm font-medium text-gray-700 mb-2">
+                Number of Visitors
+              </label>
+              <input
+                type="number"
+                id="visitorsCount"
+                name="visitorsCount"
+                value={formData.visitorsCount}
+                onChange={handleChange}
+                placeholder="0"
+                min="0"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label htmlFor="speakers" className="block text-sm font-medium text-gray-700 mb-2">
+                Speakers
+              </label>
+              <input
+                type="text"
+                id="speakers"
+                name="speakers"
+                value={formData.speakers}
+                onChange={handleChange}
+                placeholder="Comma separated names"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+            
+          </div>
           <div>
             <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
-              Description
+              Description *
             </label>
-            <textarea
+            <input
+              type="text"
               id="description"
               name="description"
               value={formData.description}
               onChange={handleChange}
-              placeholder="Event description (optional)"
-              rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+              placeholder="Description"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-25px"
+
             />
           </div>
 

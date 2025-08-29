@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Search, Plus, Edit, Trash2 } from 'lucide-react';
 import AddEventModal from './modals/AddEventModal';
 import { eventsAPI } from '../services/api';
+import Footer from './Footer';
 
 interface Event {
   _id: string;
@@ -10,8 +11,9 @@ interface Event {
   time: string;
   location: string;
   type: string;
-  expectedAttendees: number;
-  description?: string;
+  attendeesCount: number;
+  visitorsCount?: number;
+  speakers?: string;
   status: string;
 }
 
@@ -32,13 +34,11 @@ const EditEventModal: React.FC<EditEventModalProps> = ({ isOpen, onClose, event,
   }, [event]);
 
   const eventTypes = [
-    'Service',
-    'Fellowship',
-    'Conference',
-    'Meeting',
     'Outreach',
     'Service',
-    'Prayer',
+    'Fellowship',
+    'Bible Study',
+    'Repentance',
   ];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -92,14 +92,21 @@ const EditEventModal: React.FC<EditEventModalProps> = ({ isOpen, onClose, event,
               ))}
             </select>
           </div>
-          <div>
-            <label htmlFor="expectedAttendees" className="block text-sm font-medium text-gray-700 mb-2">Expected Attendees</label>
-            <input type="number" id="expectedAttendees" name="expectedAttendees" value={formData.expectedAttendees || 0} onChange={handleChange} min="0" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="attendeesCount" className="block text-sm font-medium text-gray-700 mb-2">Number of Attendees</label>
+              <input type="number" id="attendeesCount" name="attendeesCount" value={formData.attendeesCount || 0} onChange={handleChange} min="0" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+            </div>
+            <div>
+              <label htmlFor="visitorsCount" className="block text-sm font-medium text-gray-700 mb-2">Number of Visitors</label>
+              <input type="number" id="visitorsCount" name="visitorsCount" value={formData.visitorsCount || 0} onChange={handleChange} min="0" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+            </div>
           </div>
           <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">Description</label>
-            <textarea id="description" name="description" value={formData.description || ''} onChange={handleChange} rows={3} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none" />
+            <label htmlFor="speakers" className="block text-sm font-medium text-gray-700 mb-2">Speakers</label>
+            <input type="text" id="speakers" name="speakers" value={formData.speakers || ''} onChange={handleChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
           </div>
+          
           <div className="flex justify-end space-x-3 pt-4">
             <button type="button" onClick={onClose} className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors duration-200">Cancel</button>
             <button type="submit" className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors duration-200">Update Event</button>
@@ -239,7 +246,8 @@ const Events: React.FC = () => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expected</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Attendees</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Visitors</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
@@ -262,9 +270,8 @@ const Events: React.FC = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                     {event.type}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                    {event.expectedAttendees}
-                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{event.attendeesCount ?? 0}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{event.visitorsCount ?? 0}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(event.status)}`}>
                       {event.status}
@@ -295,6 +302,7 @@ const Events: React.FC = () => {
       event={selectedEvent}
       onSubmit={handleEditEvent}
     />
+    <Footer />
     </>
   );
 };

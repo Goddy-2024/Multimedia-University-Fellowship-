@@ -26,28 +26,26 @@ router.get('/', authenticate, async (req, res) => {
         {
           _id: '1',
           name: 'Morning Class Evangelism',
-          description: 'Evangelism during morning classes',
           date: '2024-12-15',
           time: '09:00',
           location: 'Main Hall',
           type: 'Service',
-          expectedAttendees: 150,
-          actualAttendees: 142,
-          status: 'Upcoming',
-          organizer: { name: 'Godswill Omondi Ajuoga', email: 'gaoajuoga@gmail.com' }
+          attendeesCount: 142,
+          visitorsCount: 10,
+          speakers: 'Pastor John Doe',
+          status: 'Completed'
         },
         {
           _id: '2',
           name: 'Weekly Fellowship',
-          description: 'Weekly fellowship meeting',
           date: '2024-12-18',
           time: '19:00',
           location: 'Conference Room',
-          type: 'Study',
-          expectedAttendees: 80,
-          actualAttendees: 0,
-          status: 'Upcoming',
-          organizer: { name: 'William Ndiema', email: 'william.ndiema@gmail.com' }
+          type: 'Fellowship',
+          attendeesCount: 85,
+          visitorsCount: 5,
+          speakers: 'Elder Jane',
+          status: 'Completed'
         }
       ];
 
@@ -119,7 +117,6 @@ router.get('/', authenticate, async (req, res) => {
 router.get('/:id', authenticate, async (req, res) => {
   try {
     const event = await Event.findById(req.params.id)
-      .populate('name phone')
       .populate('attendees.member', 'name');
     
     if (!event) {
@@ -139,7 +136,33 @@ router.get('/:id', authenticate, async (req, res) => {
 // Create new event
 router.post('/', authenticate, authorize('admin', 'moderator'), async (req, res) => {
   try {
-    const event = new Event(req.body);
+    const {
+      name,
+      date,
+      time,
+      location,
+      type,
+      attendeesCount,
+      visitorsCount,
+      description,
+      speakers,
+      status
+    } = req.body;
+
+    const sanitizedBody = {
+      name,
+      date,
+      time,
+      location,
+      type,
+      attendeesCount,
+      visitorsCount,
+      speakers,
+      description,
+      status
+    };
+
+    const event = new Event(sanitizedBody);
     await event.save();
 
 
@@ -167,11 +190,35 @@ router.post('/', authenticate, authorize('admin', 'moderator'), async (req, res)
 // Update event
 router.put('/:id', authenticate, authorize('admin', 'moderator'), async (req, res) => {
   try {
+    const {
+      name,
+      date,
+      time,
+      location,
+      type,
+      attendeesCount,
+      visitorsCount,
+      speakers,
+      status
+    } = req.body;
+
+    const sanitizedBody = {
+      ...(name !== undefined && { name }),
+      ...(date !== undefined && { date }),
+      ...(time !== undefined && { time }),
+      ...(location !== undefined && { location }),
+      ...(type !== undefined && { type }),
+      ...(attendeesCount !== undefined && { attendeesCount }),
+      ...(visitorsCount !== undefined && { visitorsCount }),
+      ...(speakers !== undefined && { speakers }),
+      ...(status !== undefined && { status })
+    };
+
     const event = await Event.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      sanitizedBody,
       { new: true, runValidators: true }
-    ).populate('name');
+    );
 
     if (!event) {
       return res.status(404).json({ message: 'Event not found' });
@@ -279,8 +326,8 @@ router.put('/:id/attendees/:memberId/checkin', authenticate, authorize('admin', 
     attendee.checkedIn = true;
     attendee.checkedInAt = new Date();
     
-    // Update actual attendees count
-    event.actualAttendees = event.attendees.filter(att => att.checkedIn).length;
+    // Update attendeesCount based on check-ins
+    event.attendeesCount = event.attendees.filter(att => att.checkedIn).length;
     
     await event.save();
 

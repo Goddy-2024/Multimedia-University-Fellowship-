@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { BarChart3, Users, Calendar, FileText, LogOut } from 'lucide-react';
+import { BarChart3, Users, Calendar, FileText, Mail, LogOut } from 'lucide-react';
 
 interface LayoutProps {
   children: ReactNode;
@@ -15,6 +15,7 @@ const Layout: React.FC<LayoutProps> = ({ children, onLogout }) => {
     { name: 'Members', href: '/members', icon: Users },
     { name: 'Events', href: '/events', icon: Calendar },
     { name: 'Reports', href: '/reports', icon: FileText },
+    { name: 'Email', href: '/email', icon: Mail },
   ];
 
   const isActive = (href: string) => location.pathname === href;

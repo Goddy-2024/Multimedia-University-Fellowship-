@@ -41,35 +41,47 @@ router.get('/department-distribution', authenticate, async (req, res) => {
 // Get monthly summary
 router.get('/monthly-summary', authenticate, async (req, res) => {
   try {
-    const now = new Date();
-    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const { startDate, endDate } = req.query;
+    const now = endDate ? new Date(endDate) : new Date();
+    const startOfRange = startDate ? new Date(startDate) : new Date(now.getFullYear(), now.getMonth(), 1);
 
-    const [totalEvents, totalAttendance] = await Promise.all([
+    const [totalEvents, totalAttendance, totalVisitors] = await Promise.all([
       Event.countDocuments({
-        date: { $gte: startOfMonth, $lte: now }
+        date: { $gte: startOfRange, $lte: now }
       }),
       Event.aggregate([
         {
           $match: {
             status: 'Completed',
-            date: { $gte: startOfMonth, $lte: now }
+            date: { $gte: startOfRange, $lte: now }
           }
         },
         {
           $group: {
             _id: null,
-            total: { $sum: '$actualAttendees' }
+            total: { $sum: '$attendeesCount' }
           }
         }
+      ]),
+      Event.aggregate([
+        {
+          $match: {
+            status: 'Completed',
+            date: { $gte: startOfRange, $lte: now }
+          }
+        },
+        { $group: { _id: null, visitors: { $sum: '$visitorsCount' } } }
       ])
     ]);
 
     const attendance = totalAttendance.length > 0 ? totalAttendance[0].total : 0;
+    const visitors = totalVisitors.length > 0 ? totalVisitors[0].visitors : 0;
     const averagePerEvent = totalEvents > 0 ? Math.round(attendance / totalEvents) : 0;
 
     res.json({
       totalEvents,
       totalAttendance: attendance,
+      totalVisitors: visitors,
       averagePerEvent
     });
   } catch (error) {
@@ -84,14 +96,22 @@ router.get('/monthly-summary', authenticate, async (req, res) => {
 // Get top events
 router.get('/top-events', authenticate, async (req, res) => {
   try {
+    const { startDate, endDate } = req.query;
+    const match = { status: 'Completed' };
+    if (startDate || endDate) {
+      match.date = {};
+      if (startDate) match.date.$gte = new Date(startDate);
+      if (endDate) match.date.$lte = new Date(endDate);
+    }
+
     const topEvents = await Event.aggregate([
       {
-        $match: { status: 'Completed' }
+        $match: match
       },
       {
         $group: {
           _id: '$name',
-          avgAttendance: { $avg: '$actualAttendees' },
+          avgAttendance: { $avg: '$attendeesCount' },
           eventCount: { $sum: 1 }
         }
       },
@@ -121,10 +141,58 @@ router.get('/top-events', authenticate, async (req, res) => {
 // Get growth metrics
 router.get('/growth-metrics', authenticate, async (req, res) => {
   try {
-    const now = new Date();
+    const { startDate, endDate } = req.query;
+    const now = endDate ? new Date(endDate) : new Date();
     const startOfThisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
     const endOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+
+    // If a custom range is provided, compute metrics for that range vs the preceding equal-length range
+    if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      const rangeMs = end.getTime() - start.getTime();
+      const prevEnd = new Date(start.getTime() - 1);
+      const prevStart = new Date(prevEnd.getTime() - rangeMs);
+
+      const [
+        thisPeriodMembers,
+        lastPeriodMembers,
+        thisPeriodAttendance,
+        lastPeriodAttendance,
+        thisPeriodEvents
+      ] = await Promise.all([
+        Member.countDocuments({ status: 'Active', joinDate: { $lte: end } }),
+        Member.countDocuments({ status: 'Active', joinDate: { $lte: prevEnd } }),
+        Event.aggregate([
+          { $match: { status: 'Completed', date: { $gte: start, $lte: end } } },
+          { $group: { _id: null, total: { $sum: '$attendeesCount' } } }
+        ]),
+        Event.aggregate([
+          { $match: { status: 'Completed', date: { $gte: prevStart, $lte: prevEnd } } },
+          { $group: { _id: null, total: { $sum: '$attendeesCount' } } }
+        ]),
+        Event.countDocuments({ date: { $gte: start, $lte: end } })
+      ]);
+
+      const thisAtt = thisPeriodAttendance.length > 0 ? thisPeriodAttendance[0].total : 0;
+      const lastAtt = lastPeriodAttendance.length > 0 ? lastPeriodAttendance[0].total : 0;
+      const attendanceGrowth = lastAtt > 0 ? (((thisAtt - lastAtt) / lastAtt) * 100).toFixed(1) : '0.0';
+
+      // Events per week within range
+      const weeks = Math.max(1, rangeMs / (1000 * 60 * 60 * 24 * 7));
+      const eventFrequency = (thisPeriodEvents / weeks).toFixed(1);
+
+      const memberGrowth = lastPeriodMembers > 0
+        ? (((thisPeriodMembers - lastPeriodMembers) / lastPeriodMembers) * 100).toFixed(1)
+        : '0.0';
+
+      return res.json({
+        memberGrowth: `${Number(memberGrowth) > 0 ? '+' : ''}${memberGrowth}%`,
+        attendanceGrowth: `${Number(attendanceGrowth) > 0 ? '+' : ''}${attendanceGrowth}%`,
+        eventFrequency: `${eventFrequency}/week`
+      });
+    }
 
     const [
       thisMonthMembers,
@@ -152,7 +220,7 @@ router.get('/growth-metrics', authenticate, async (req, res) => {
         {
           $group: {
             _id: null,
-            total: { $sum: '$actualAttendees' }
+            total: { $sum: '$attendeesCount' }
           }
         }
       ]),
@@ -166,7 +234,7 @@ router.get('/growth-metrics', authenticate, async (req, res) => {
         {
           $group: {
             _id: null,
-            total: { $sum: '$actualAttendees' }
+            total: { $sum: '$attendeesCount' }
           }
         }
       ]),
@@ -204,6 +272,59 @@ router.get('/growth-metrics', authenticate, async (req, res) => {
     console.error('Growth metrics error:', error);
     res.status(500).json({
       message: 'Error fetching growth metrics',
+      error: error.message
+    });
+  }
+});
+
+// Get monthly attendance trend
+router.get('/attendance-trend', authenticate, async (req, res) => {
+  try {
+    const { startDate, endDate } = req.query;
+    
+    // Default to last 6 months if no date range provided
+    const now = endDate ? new Date(endDate) : new Date();
+    const sixMonthsAgo = startDate ? new Date(startDate) : new Date();
+    if (!startDate) {
+      sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+    }
+
+    const attendanceData = await Event.aggregate([
+      {
+        $match: {
+          status: { $in: ['Completed', 'Planning', 'Upcoming', 'Ongoing'] },
+          date: { $gte: sixMonthsAgo, $lte: now }
+        }
+      },
+      {
+        $group: {
+          _id: {
+            year: { $year: '$date' },
+            month: { $month: '$date' }
+          },
+          avgAttendance: { $avg: '$attendeesCount' },
+          totalEvents: { $sum: 1 }
+        }
+      },
+      {
+        $sort: { '_id.year': 1, '_id.month': 1 }
+      }
+    ]);
+
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+    const formattedData = attendanceData.map(item => ({
+      month: monthNames[item._id.month - 1],
+      attendance: Math.round(item.avgAttendance),
+      events: item.totalEvents
+    }));
+
+    res.json(formattedData);
+  } catch (error) {
+    console.error('Attendance trend error:', error);
+    res.status(500).json({
+      message: 'Error fetching attendance trend',
       error: error.message
     });
   }

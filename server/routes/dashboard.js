@@ -24,11 +24,11 @@ router.get('/stats', authenticate, async (req, res) => {
       };
 
       const mockRecentActivities = [
-        { name: 'Morning Class Evangelism', attendees: 142, timeAgo: '2 days ago' },
-        { name: 'Lunch Hour Fellowship', attendees: 185, timeAgo: '1 week ago' },
-        { name: 'Sunday Service', attendees: 120, timeAgo: '1 week ago' },
-        { name: 'Bible Study', attendees: 85, timeAgo: '2 weeks ago' },
-        { name: 'Prayer Meeting', attendees: 67, timeAgo: '2 weeks ago' }
+        { name: 'Morning Class Evangelism', attendees: 14, timeAgo: '2 days ago' },
+        { name: 'Lunch Hour Fellowship', attendees: 18, timeAgo: '1 week ago' },
+        { name: 'Sunday Service', attendees: 12, timeAgo: '1 week ago' },
+        { name: 'Bible Study', attendees: 8, timeAgo: '2 weeks ago' },
+        { name: 'Prayer Meeting', attendees: 6, timeAgo: '2 weeks ago' }
       ];
 
       const mockUpcomingEvents = [
@@ -74,7 +74,7 @@ router.get('/stats', authenticate, async (req, res) => {
       })
       .sort({ date: -1 })
       .limit(5)
-      .select('name actualAttendees date'),
+      .select('name attendeesCount date'),
       
       // Upcoming events
       Event.find({
@@ -96,17 +96,21 @@ router.get('/stats', authenticate, async (req, res) => {
         {
           $group: {
             _id: null,
-            totalExpected: { $sum: '$expectedAttendees' },
-            totalActual: { $sum: '$actualAttendees' }
+            totalAttendees: { $sum: '$attendeesCount' },
+            events: { $sum: 1 }
           }
         }
       ])
     ]);
 
-    // Calculate attendance rate
-    const attendanceRate = attendanceData.length > 0 && attendanceData[0].totalExpected > 0
-      ? Math.round((attendanceData[0].totalActual / attendanceData[0].totalExpected) * 100)
-      : 0;
+    // Calculate attendance rate as average attendees per event vs total members
+    let attendanceRate = 0;
+    if (attendanceData.length > 0 && totalMembers > 0) {
+      const avgPerEvent = attendanceData[0].events > 0
+        ? attendanceData[0].totalAttendees / attendanceData[0].events
+        : 0;
+      attendanceRate = Math.round((avgPerEvent / totalMembers) * 100);
+    }
 
     res.json({
       stats: {
@@ -117,7 +121,7 @@ router.get('/stats', authenticate, async (req, res) => {
       },
       recentActivities: recentEvents.map(event => ({
         name: event.name,
-        attendees: event.actualAttendees,
+        attendees: event.attendeesCount,
         timeAgo: getTimeAgo(event.date)
       })),
       upcomingEvents: upcomingEvents.map(event => ({
@@ -135,64 +139,7 @@ router.get('/stats', authenticate, async (req, res) => {
   }
 });
 
-// Get monthly attendance trend
-router.get('/attendance-trend', authenticate, async (req, res) => {
-  try {
-    // Check if MongoDB is connected
-    if (mongoose.connection.readyState !== 1) {
-      // If MongoDB is not connected, return mock data
-      const mockAttendanceTrend = [
-        { month: 'Jul', attendance: 120 },
-        { month: 'Aug', attendance: 135 },
-        { month: 'Sep', attendance: 142 },
-        { month: 'Oct', attendance: 128 },
-        { month: 'Nov', attendance: 155 },
-        { month: 'Dec', attendance: 145 }
-      ];
-      return res.json(mockAttendanceTrend);
-    }
 
-    const sixMonthsAgo = new Date();
-    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
-
-    const attendanceData = await Event.aggregate([
-      {
-        $match: {
-          status: 'Completed',
-          date: { $gte: sixMonthsAgo }
-        }
-      },
-      {
-        $group: {
-          _id: {
-            year: { $year: '$date' },
-            month: { $month: '$date' }
-          },
-          avgAttendance: { $avg: '$actualAttendees' }
-        }
-      },
-      {
-        $sort: { '_id.year': 1, '_id.month': 1 }
-      }
-    ]);
-
-    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-                       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-    const formattedData = attendanceData.map(item => ({
-      month: monthNames[item._id.month - 1],
-      attendance: Math.round(item.avgAttendance)
-    }));
-
-    res.json(formattedData);
-  } catch (error) {
-    console.error('Attendance trend error:', error);
-    res.status(500).json({
-      message: 'Error fetching attendance trend',
-      error: error.message
-    });
-  }
-});
 
 // Helper function to calculate time ago
 function getTimeAgo(date) {

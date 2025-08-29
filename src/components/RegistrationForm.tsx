@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { registrationAPI } from '../services/api';
+import Footer from './Footer';
 
 interface FormData {
   formId: string;
@@ -430,6 +431,7 @@ const RegistrationForm: React.FC = () => {
           </form>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

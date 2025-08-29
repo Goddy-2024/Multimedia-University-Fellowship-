@@ -7,6 +7,7 @@ import Layout from './components/Layout';
 import Members from './components/Members';
 import Events from './components/Events';
 import Reports from './components/Reports';
+import Email from './components/Email';
 import RegistrationForm from './components/RegistrationForm';
 
 function App() {
@@ -44,6 +45,9 @@ function App() {
         } />
         <Route path="/reports" element={
           isAuthenticated ? <Layout onLogout={logout}><Reports /></Layout> : <Login onLogin={login} />
+        } />
+        <Route path="/email" element={
+          isAuthenticated ? <Layout onLogout={logout}><Email /></Layout> : <Login onLogin={login} />
         } />
         
         {/* Catch all route */}

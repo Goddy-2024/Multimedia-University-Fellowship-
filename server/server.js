@@ -13,22 +13,33 @@ import eventRoutes from './routes/events.js';
 import reportRoutes from './routes/reports.js';
 import dashboardRoutes from './routes/dashboard.js';
 import registrationRoutes from './routes/registration.js';
+import emailRoutes from './routes/email.js';
 
 // Load environment variables
 dotenv.config();
 
 // Set default environment variables for development
 if (!process.env.JWT_SECRET) {
-  process.env.JWT_SECRET = 'your-super-secret-jwt-key-change-this-in-production';
+  process.env.JWT_SECRET = '3d026172d704581d0f4179d6d2e346c089e05362e109c03c94ff83c1607db62da5c50609cdbf2287797f63453738a9dc094d67deaadd230537c83208219bc8f1';
 }
 if (!process.env.CLIENT_URL) {
   if (process.env.NODE_ENV === 'production') {
     // In production, use the actual frontend URL
-    process.env.CLIENT_URL = process.env.FRONTEND_URL || 'https://your-frontend-domain.vercel.app';
+    process.env.CLIENT_URL = process.env.FRONTEND_URL || 'https://multimedia-university-fellowship.vercel.app/dashboard';
   } else {
     // In development, use localhost
     process.env.CLIENT_URL = 'http://localhost:5174';
+    
   }
+}
+
+// Set default email configuration
+if (!process.env.EMAIL_USER) {
+  process.env.EMAIL_USER = 'godswill.omondi@gmail.com';
+}
+
+if (!process.env.EMAIL_PASS) {
+  process.env.EMAIL_PASS = 'nwmwfskxmkveuhsz';
 }
 
 const app = express();
@@ -69,6 +80,7 @@ app.use('/api/events', eventRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/registration', registrationRoutes);
+app.use('/api/email', emailRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { dashboardAPI } from '../../services/api';
+import { reportsAPI } from '../../services/api';
 
 interface AttendanceData {
   month: string;
@@ -19,7 +19,7 @@ const AttendanceChart: React.FC = () => {
   const fetchAttendanceData = async () => {
     try {
       setLoading(true);
-      const response = await dashboardAPI.getAttendanceTrend();
+      const response = await reportsAPI.getAttendanceTrend();
       setData(response);
       setError(null);
     } catch (err) {

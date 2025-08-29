@@ -19,8 +19,23 @@ const createHeaders = () => {
 const apiRequest = async (endpoint: string, options: RequestInit = {}) => {
   const url = `${API_BASE_URL}${endpoint}`;
   console.log(`Making API request to: ${url}`);
+  
+  // Handle headers properly for FormData vs JSON
+  let headers: Record<string, string>;
+  if (options.body instanceof FormData) {
+    // For FormData, use provided headers or just auth token
+    headers = { ...options.headers } as Record<string, string>;
+    const token = getAuthToken();
+    if (token && !headers['Authorization']) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+  } else {
+    // For JSON, use default headers with auth token
+    headers = createHeaders();
+  }
+  
   const config: RequestInit = {
-    headers: createHeaders(),
+    headers,
     ...options
   };
 
@@ -183,9 +198,10 @@ export const dashboardAPI = {
     return result;
   },
 
-  getAttendanceTrend: async () => {
+  getAttendanceTrend: async (queryParams?: string) => {
     console.log('Calling attendance trend API...');
-    const result = await apiRequest('/dashboard/attendance-trend');
+    const suffix = queryParams ? `?${queryParams}` : '';
+    const result = await apiRequest(`/reports/attendance-trend${suffix}`);
     console.log('Attendance trend result:', result);
     return result;
   }
@@ -197,16 +213,24 @@ export const reportsAPI = {
     return apiRequest('/reports/department-distribution');
   },
 
-  getMonthlySummary: async () => {
-    return apiRequest('/reports/monthly-summary');
+  getMonthlySummary: async (queryParams?: string) => {
+    const suffix = queryParams ? `?${queryParams}` : '';
+    return apiRequest(`/reports/monthly-summary${suffix}`);
   },
 
-  getTopEvents: async () => {
-    return apiRequest('/reports/top-events');
+  getTopEvents: async (queryParams?: string) => {
+    const suffix = queryParams ? `?${queryParams}` : '';
+    return apiRequest(`/reports/top-events${suffix}`);
   },
 
-  getGrowthMetrics: async () => {
-    return apiRequest('/reports/growth-metrics');
+  getGrowthMetrics: async (queryParams?: string) => {
+    const suffix = queryParams ? `?${queryParams}` : '';
+    return apiRequest(`/reports/growth-metrics${suffix}`);
+  },
+
+  getAttendanceTrend: async (queryParams?: string) => {
+    const suffix = queryParams ? `?${queryParams}` : '';
+    return apiRequest(`/reports/attendance-trend${suffix}`);
   }
 };
 
@@ -249,5 +273,24 @@ export const registrationAPI = {
     return apiRequest(`/registration/forms/${formId}`, {
       method: 'DELETE'
     });
+  }
+};
+
+// Email API
+export const emailAPI = {
+  getMemberEmails: async (queryParams?: string) => {
+    const suffix = queryParams ? `?${queryParams}` : '';
+    return apiRequest(`/email/member-emails${suffix}`);
+  },
+
+  sendBulkEmail: async (formData: FormData) => {
+    return apiRequest('/email/send-bulk', {
+      method: 'POST',
+      body: formData
+    });
+  },
+
+  getEmailStats: async () => {
+    return apiRequest('/email/stats');
   }
 };

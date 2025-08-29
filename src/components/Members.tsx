@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Search, UserPlus, Edit, Trash2 } from 'lucide-react';
 import AddMemberModal from './modals/AddMemberModal';
 import { membersAPI } from '../services/api';
+import Footer from './Footer';
 
 // 1. Define the type for a Member
 interface Member {
@@ -270,6 +271,7 @@ const Members: React.FC = () => {
         member={selectedMember}
         onSubmit={handleEditMember}
       />
+      <Footer />
     </>
   );
 };

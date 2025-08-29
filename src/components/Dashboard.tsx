@@ -6,7 +6,8 @@ import UpcomingEvents from './dashboard/UpcomingEvents';
 import RegistrationForms from './dashboard/RegistrationForms';
 import GenerateFormModal from './modals/GenerateFormModal';
 import { dashboardAPI } from '../services/api';
-
+import Footer from './Footer';
+const version = "2.0"
 const statusColorMap: Record<string, string> = {
   Upcoming: 'bg-blue-100 text-blue-800',
   Confirmed: 'bg-green-100 text-green-800',
@@ -112,6 +113,7 @@ const Dashboard: React.FC = () => {
           window.location.reload();
         }}
       />
+      <Footer />
     </div>
   );
 };

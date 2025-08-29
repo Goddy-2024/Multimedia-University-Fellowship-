@@ -1,0 +1,164 @@
+# Instructions
+
+During you interaction with the user, if you find anything reusable in this project (e.g. version of a library, model name), especially about a fix to a mistake you made or a correction you received, you should take note in the `Lessons` section in the `.cursorrules` file so you will not make the same mistake again. 
+
+You should also use the `.cursorrules` file as a scratchpad to organize your thoughts. Especially when you receive a new task, you should first review the content of the scratchpad, clear old different task if necessary, first explain the task, and plan the steps you need to take to complete the task. You can use todo markers to indicate the progress, e.g.
+[X] Task 1
+[ ] Task 2
+Also update the progress of the task in the Scratchpad when you finish a subtask.
+Especially when you finished a milestone, it will help to improve your depth of task accomplishment to use the scratchpad to reflect and plan.
+The goal is to help you maintain a big picture as well as the progress of the task. Always refer to the Scratchpad when you plan the next step.
+
+# Tools
+
+Note all the tools are in python. So in the case you need to do batch processing, you can always consult the python files and write your own script.
+
+## LLM
+
+You always have an LLM at your side to help you with the task. For simple tasks, you could invoke the LLM by running the following command:
+```bash
+cursor-llm --prompt "What is the capital of France?" --provider "anthropic"
+```
+
+The LLM API supports multiple providers:
+- OpenAI (default, model: gpt-4o)
+- DeepSeek (model: deepseek-chat)
+- Anthropic (model: claude-3-sonnet-20240229)
+- Gemini (model: gemini-pro)
+- Local LLM (model: Qwen/Qwen2.5-32B-Instruct-AWQ)
+
+But usually it's a better idea to check the content of the file and use the APIs in the `cursor_agent/tools/llm_api.py` file to invoke the LLM if needed.
+
+## Web browser
+
+You could use the web scraper to fetch web pages:
+```bash
+cursor-scrape --max-concurrent 3 URL1 URL2 URL3
+```
+This will output the content of the web pages.
+
+## Search engine
+
+You could use the search engine to find information:
+```bash
+cursor-search "your search keywords"
+cursor-search --max-results 5 "specific search"
+```
+This will output the search results in the following format:
+```
+URL: https://example.com
+Title: This is the title of the search result
+Snippet: This is a snippet of the search result
+```
+If needed, you can further use the `web_scraper.py` file to scrape the web page content.
+
+# Lessons
+
+## User Specified Lessons
+
+- You have a python venv in ./venv.
+- Include info useful for debugging in the program output.
+- Read the file before you try to edit it.
+- Use LLM to perform flexible text understanding tasks. First test on a few files. After success, make it parallel.
+
+## Cursor learned
+
+- For website image paths, always use the correct relative path (e.g., 'images/filename.png') and ensure the images directory exists
+- For search results, ensure proper handling of different character encodings (UTF-8) for international queries
+- Add debug information to stderr while keeping the main output clean in stdout for better pipeline integration
+- When using seaborn styles in matplotlib, use 'seaborn-v0_8' instead of 'seaborn' as the style name due to recent seaborn version changes
+- Available command-line tools after installation:
+  - `cursor-agent`: Initialize directory with agent capabilities
+  - `cursor-llm`: LLM interaction (OpenAI, DeepSeek, Anthropic, Gemini, Local)
+  - `cursor-scrape`: Web scraping with JavaScript support
+  - `cursor-search`: Search engine integration
+  - `cursor-update`: Update to latest version
+  - `cursor-verify`: Verify setup
+
+## Testing Lessons
+
+- Use pytest fixtures in conftest.py for common test data and setup
+- Mock environment variables with autouse fixture to ensure consistent test environment
+- Test both success and failure cases for each command
+- Verify exact function call arguments using assert_called_once_with
+- Use temporary directories (tmp_path) for file operation tests
+- Keep mock data realistic and consistent with actual API responses
+- Test CLI argument parsing with sys.argv mocking
+- Add proper cleanup in teardown to restore original state
+- Test file operations should use Path objects for cross-platform compatibility
+- Mock external API calls and file operations to make tests reliable and fast
+
+# Scratchpad
+
+## Current Task: Email System Fix & Version Footer Implementation
+
+**Problem**: Users report that recipients are not receiving emails after sending through the bulk email system.
+
+**Root Cause Analysis**:
+[X] Scanned email codebase and identified the issue
+[X] Found that the email system is using a MOCK implementation
+[X] No actual email sending functionality implemented
+[X] Missing nodemailer dependency
+[X] No SMTP configuration or environment variables
+
+**Issues Found**:
+1. **Mock Implementation**: `server/routes/email.js` line 110-131 shows "Mock email sending (in real implementation, you would use nodemailer)"
+2. **Missing Dependency**: `nodemailer` not installed in `server/package.json`
+3. **No SMTP Configuration**: No environment variables for email service configuration
+4. **No Error Handling**: System returns success even though no emails are actually sent
+
+**Solution Plan**:
+[X] Install nodemailer dependency
+[X] Add SMTP configuration environment variables
+[X] Implement actual email sending functionality
+[X] Add proper error handling and logging
+[X] Test email delivery
+
+**Implementation Complete**:
+✅ Replaced mock email implementation with real nodemailer functionality
+✅ Configured Gmail SMTP with provided credentials
+✅ Added HTML email formatting with professional styling
+✅ Implemented bulk email sending with individual tracking
+✅ Added detailed success/failure reporting
+✅ Updated frontend to show delivery results
+✅ Added rate limiting (100ms delay between emails) to avoid Gmail limits
+✅ Fixed nodemailer API compatibility issue (createTransporter → createTransport, async/await)
+
+**Version Footer Implementation**:
+✅ Created version utility with git-based versioning support
+✅ Updated Footer component with professional styling and version display
+✅ Added Footer to all main pages:
+  - Dashboard (already had it)
+  - Email
+  - Members
+  - Events
+  - Reports
+  - RegistrationForm
+  - Login
+✅ Version displays as "RHSF-ADMIN v2.1.0 (YYYY-MM-DD)" with copyright
+
+## Previous Task: Events and Reports overhaul (attendeesCount, visitors, speakers, filters)
+
+[X] Update `server/models/Event.js` to use `attendeesCount`, `visitorsCount`, `speakers`; limit `type` enum; remove legacy fields
+[X] Update events routes (mock data, single GET populate cleanup, check-in to update `attendeesCount`)
+[X] Update dashboard stats and attendance trend to use `attendeesCount`; redefine attendance rate
+[X] Update reports routes: monthly summary (accept start/end, include totalVisitors), top events, growth metrics to use `attendeesCount`
+[X] Update seed data to new schema fields and allowed types
+[X] Update frontend AddEventModal and Events table/Edit to new fields; default status Completed
+[X] Update Reports page: add Custom date range, filter Fellowship activities, include visitors column, pass date range to API
+[X] Update services API for monthly summary query params
+[X] Ensure charts (Recharts) consume updated data
+
+Progress:
+1. Backend and frontend synchronized to new event model
+2. Reporting respects selected duration and prints fellowship activities with visitors
+3. Charts and metrics use attendeesCount
+
+Next steps:
+1. Optional: add date-range filters to top-events, growth-metrics, department-distribution endpoints
+2. Test end-to-end creating event and generating report
+
+## Lessons
+- When changing schema fields (expected/actual → attendeesCount), grep for all usages across backend and frontend, including seed/mocks and print logic
+- Reports duration: wire both API and UI; pass start/end via query params consistently
+- **Email System**: Always verify actual email sending implementation vs mock implementations; check for missing dependencies and SMTP configuration

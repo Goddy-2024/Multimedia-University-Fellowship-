@@ -4,6 +4,7 @@ import { reportsAPI } from '../../services/api';
 interface MonthlySummary {
   totalEvents: number;
   totalAttendance: number;
+  totalVisitors?: number;
   averagePerEvent: number;
 }
 

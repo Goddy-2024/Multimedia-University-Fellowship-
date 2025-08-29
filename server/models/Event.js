@@ -7,10 +7,6 @@ const eventSchema = new mongoose.Schema({
     trim: true,
     maxlength: [100, 'Event name cannot exceed 100 characters']
   },
-  description: {
-    type: String,
-    maxlength: [500, 'Description cannot exceed 500 characters']
-  },
   date: {
     type: Date,
     required: [true, 'Event date is required']
@@ -28,22 +24,32 @@ const eventSchema = new mongoose.Schema({
   type: {
     type: String,
     required: [true, 'Event type is required'],
-    enum: ['Service', 'Study', 'Conference', 'Meeting', 'Outreach', 'Social', 'Training']
+    enum: ['Outreach', 'Service', 'Fellowship', 'Bible Study', 'Repentance']
   },
-  expectedAttendees: {
+  attendeesCount: {
     type: Number,
-    min: [1, 'Expected attendees must be at least 1'],
-    max: [1000, 'Expected attendees cannot exceed 1000']
-  },
-  actualAttendees: {
-    type: Number,
-    min: [0, 'Actual attendees cannot be negative'],
+    required: [true, 'Number of attendees is required'],
+    min: [0, 'Number of attendees cannot be negative'],
     default: 0
+  },
+  visitorsCount: {
+    type: Number,
+    min: [0, 'Number of visitors cannot be negative'],
+    default: 0
+  },
+  speakers: {
+    type: String,
+    maxlength: [200, 'Speakers cannot exceed 200 characters']
   },
   status: {
     type: String,
-    enum: ['Planning', 'Upcoming', 'Ongoing', 'Completed', 'Cancelled'],
-    default: 'Planning'
+    enum: ['Completed'],
+    default: 'Completed'
+  },
+  description: {
+    type: String,
+    required: [true, 'Description is required'],
+    trim: true
   },
   attendees: [{
     member: {
@@ -56,22 +62,11 @@ const eventSchema = new mongoose.Schema({
     },
     checkedInAt: Date
   }],
-  budget: {
-    allocated: {
-      type: Number,
-      min: [0, 'Budget cannot be negative'],
-      default: 0
-    },
-    spent: {
-      type: Number,
-      min: [0, 'Spent amount cannot be negative'],
-      default: 0
-    }
-  },
-  notes: {
-    type: String,
-    maxlength: [1000, 'Notes cannot exceed 1000 characters']
-  }
+  // The following legacy fields have been removed to simplify event data entry post-event:
+  // - expectedAttendees
+  // - actualAttendees
+  // - budget
+  // - notes
 }, {
   timestamps: true
 });

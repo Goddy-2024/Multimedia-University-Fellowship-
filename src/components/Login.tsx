@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Footer from './Footer';
 
 interface LoginProps {
   onLogin: (username: string, password: string) => Promise<any>;
@@ -82,8 +83,10 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
           <p className="text-sm text-gray-500">
             <i>Prepare the way (isaiah 40:3)</i>
           </p>
+          <Footer />
         </div>
       </div>
+      
     </div>
   );
 };
