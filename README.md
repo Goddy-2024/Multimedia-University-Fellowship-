@@ -1,6 +1,6 @@
 # Fellowship Management System - MERN Stack
 
-A comprehensive fellowship management system built with the MERN stack (MongoDB, Express.js, React, Node.js) for managing members, events, and generating reports.
+A comprehensive fellowship management system built with the MERN stack (MongoDB, Express.js, React, Node.js) for managing members, events, generating reports and sending emails.
 
 ## Features
 
