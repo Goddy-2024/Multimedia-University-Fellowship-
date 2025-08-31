@@ -119,7 +119,7 @@ router.post('/send-bulk', authenticate, upload.array('attachments', 5), async (r
           ${message.replace(/\n/g, '<br>')}
         </div>
         <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ecf0f1; font-size: 12px; color: #7f8c8d;">
-          <p>Best regards,<br>RHSF Fellowship Management System</p>
+          <p>Shalom,<br>Multimedia University Repentance and Holiness Students Fellowship</p>
         </div>
       </div>
     `;

@@ -17,7 +17,7 @@ export const sendEmail = async (to, subject, html, attachments = []) => {
     const transporter = await createTransporter();
     
     const mailOptions = {
-      from: process.env.EMAIL_USER,
+      from: "Multimedia University RHSF",
       to: to,
       subject: subject,
       html: html,
@@ -41,7 +41,7 @@ export const sendBulkEmails = async (recipients, subject, html, attachments = []
   for (const recipient of recipients) {
     try {
       const mailOptions = {
-        from: process.env.EMAIL_USER,
+        from: "Multimedia University RHSF",
         to: recipient.email,
         subject: subject,
         html: html.replace(/{{name}}/g, recipient.name || 'Member'),
