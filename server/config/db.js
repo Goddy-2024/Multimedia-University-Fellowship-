@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 export default async function connectDB(){
       try{
-            if(process.env.NODE_ENV === 'production'){
+            if(process.env.NODE_ENV === 'development'){
                   const mongoUri = process.env.MONGODB_URI;
                   await mongoose.connect(mongoUri);
             }else{
