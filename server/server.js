@@ -20,12 +20,12 @@ dotenv.config();
 
 // Set default environment variables for development
 if (!process.env.JWT_SECRET) {
-  process.env.JWT_SECRET = '3d026172d704581d0f4179d6d2e346c089e05362e109c03c94ff83c1607db62da5c50609cdbf2287797f63453738a9dc094d67deaadd230537c83208219bc8f1';
+  process.env.JWT_SECRET = process.env.JWT_SECRET;
 }
 if (!process.env.CLIENT_URL) {
   if (process.env.NODE_ENV === 'production') {
     // In production, use the actual frontend URL
-    process.env.CLIENT_URL = process.env.FRONTEND_URL || 'https://multimedia-university-fellowship.vercel.app/dashboard';
+    process.env.CLIENT_URL = process.env.FRONTEND_URL || 'https://multimedia-university-fellowship-7n.vercel.app/';
   } else {
     // In development, use localhost
     process.env.CLIENT_URL = 'http://localhost:5174';
@@ -35,11 +35,11 @@ if (!process.env.CLIENT_URL) {
 
 // Set default email configuration
 if (!process.env.EMAIL_USER) {
-  process.env.EMAIL_USER = 'godswill.omondi@gmail.com';
+  process.env.EMAIL_USER = process.env.EMAIL_USER
 }
 
 if (!process.env.EMAIL_PASS) {
-  process.env.EMAIL_PASS = 'nwmwfskxmkveuhsz';
+  process.env.EMAIL_PASS = process.env.EMAIL_PASS;
 }
 
 const app = express();
