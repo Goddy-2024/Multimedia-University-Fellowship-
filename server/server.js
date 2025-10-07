@@ -58,7 +58,7 @@ app.use(limiter);
 
 // CORS configuration
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5174',
+  origin: process.env.CLIENT_URL || 'http://localhost:5174' || 'https://multimedia-university-fellowship.vercel.app/',
   credentials: true 
 }));
 
