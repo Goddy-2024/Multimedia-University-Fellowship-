@@ -3,26 +3,37 @@ import { execSync } from "child_process";
 import { writeFileSync, readFileSync } from "fs";
 
 try {
-  // Get commit info (Node environment)
+  // 1️⃣ Read package.json
+  const packageJson = JSON.parse(readFileSync("./package.json", "utf8"));
+  let [major, minor, patch] = packageJson.version.split(".").map(Number);
+
+  // 2️⃣ Auto-increment patch version
+  patch += 1;
+  const newVersion = `${major}.${minor}.${patch}`;
+  packageJson.version = newVersion;
+
+  // 3️⃣ Write updated package.json
+  writeFileSync("./package.json", JSON.stringify(packageJson, null, 2));
+
+  // 4️⃣ Get Git commit info
   const commitHash = execSync("git rev-parse --short HEAD").toString().trim();
   const commitDate = execSync("git log -1 --format=%cd --date=short").toString().trim();
+  const branchName = execSync("git rev-parse --abbrev-ref HEAD").toString().trim();
 
-  // Read version from package.json
-  const packageJson = JSON.parse(readFileSync("./package.json", "utf8"));
-  const version = packageJson.version;
-
-  // Create version info object
+  // 5️⃣ Generate version.json (used in React app)
   const versionInfo = {
-    version,
+    version: newVersion,
     commitHash,
     commitDate,
+    branch: branchName,
     buildDate: new Date().toISOString().split("T")[0],
   };
 
-  // Write to src/version.json
   writeFileSync("./src/version.json", JSON.stringify(versionInfo, null, 2));
-  console.log(" Version info generated:", versionInfo);
+
+  console.log("Version updated to:", newVersion);
+  console.log("Commit:", commitHash, "| Branch:", branchName);
 } catch (err) {
-  console.error("Failed to generate version info:", err);
+  console.error("Version generation failed:", err);
   process.exit(1);
 }
