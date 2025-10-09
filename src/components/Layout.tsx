@@ -23,7 +23,7 @@ const Layout: React.FC<LayoutProps> = ({ children, onLogout }) => {
   return (
     <div className="min-h-screen bg-gray-50 flex">
       {/* Sidebar */}
-      <div className="w-64 bg-white shadow-lg">
+      <div className="w-64 bg-white shadow-lg fixed">
         <div className="p-6 border-b border-gray-200">
           <h1 className="text-xl font-bold text-gray-900">MMU RHSF Admin</h1>
         </div>
