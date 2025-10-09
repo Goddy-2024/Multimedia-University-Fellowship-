@@ -63,7 +63,7 @@ router.post('/register', async (req, res) => {
 });
 
 /**
- * @route   POST /login
+ * @route   POST /loginserver/routes/auth.js
  * @desc    Login user using database credentials
  * @access  Public
  */

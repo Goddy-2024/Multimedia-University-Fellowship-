@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Footer from './Footer';
+import {Eye, EyeOff} from 'lucide-react';
 
 interface LoginProps {
   onLogin: (username: string, password: string) => Promise<any>;
@@ -10,6 +11,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,8 +61,9 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
               Password
             </label>
-            <input
-              type="password"
+            <div className='flex items-center gap-2'>
+              <input
+              type={showPassword ? "text" : "password"}
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -68,6 +71,11 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
               required
             />
+            <p onClick={ () => setShowPassword(prev=>!prev)}>
+              {showPassword ? <EyeOff size={20}/> : <Eye size={20}/>}
+
+            </p>
+            </div>
           </div>
 
           <button

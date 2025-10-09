@@ -1,0 +1,26 @@
+{ 
+events:[{
+	name:"Midweek Fellowship and Welcoming First Years Celebration Service",
+	date:2025-09-10,
+	attendee_no:13,
+	visitor_no:3,
+	description:"
+		<h1>Scriptures Read: </h1><br>
+		<b>Proverbs 9:10, </b>
+		<b> Psalms 40:1</b><br>
+		<b>1 Corinthians 15:50, </b> 
+		<b>1 Thessalonians 5:2 </b><br> 
+		Galatians 5:13,  Revelation 14:6 "},
+		{
+	name:"Midweek Fellowship",
+	date:2025-09-17,
+	attendee_no:11,
+	visitor_no:1,
+	description:"
+			<b>Scriptures Read<i>(the ignorant church, consequences of ignorance)</i>: </b><br>
+			<b>Proverbs 29:25, </b>
+			<b>Revelation 20:15-27<b><br>
+			<b>Proverbs 14:12, </b> 
+			<b>1 Thessalonians 4:13 </b><br> 
+			Hosea 4:6,  Revelation 2 "}]
+}

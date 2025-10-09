@@ -1,13 +1,13 @@
-import { getVersionInfo } from '../utils/version';
+import versionInfo from "../version.json";
 
-export default function Footer() {
-  const { displayText } = getVersionInfo();
-  
+const Footer = () => {
   return (
-    <footer className="mt-8 py-4 border-t border-gray-200">
-      <p className="text-center text-gray-500 text-sm">
-        {displayText} &copy; Allure Graphics distributions
+    <footer className="text-sm text-gray-400 text-center p-4">
+      <p>
+        fellowship-admin v{versionInfo.version} • Commit{" "}
+        <code>{versionInfo.commitHash}</code> • {versionInfo.buildDate}
       </p>
     </footer>
   );
-}
+};
+export default Footer;
