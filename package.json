@@ -1,14 +1,14 @@
 {
   "name": "vite-react-typescript-starter",
   "private": true,
-  "version": "0.0.0",
+  "version": "NaN.NaN.NaN",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "server": "cd server && npm run dev",
-    "predev":"node ./scripts/version.ts",
+    "predev": "node ./scripts/version.ts",
     "dev:full": "concurrently \"npm run dev\" \"npm run server\"",
-    "prebuild":"node ./scripts/version.ts",
+    "prebuild": "node ./scripts/version.ts",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
