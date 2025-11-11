@@ -48,7 +48,7 @@ const PORT = process.env.PORT || 5000;
 // Security middleware
 app.use(helmet());
 
-// Rate limiting
+// Rate limiting middleware pipeline
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 1000, // limit each IP to 100 requests per windowMs
@@ -62,11 +62,11 @@ app.use(cors({
   credentials: true 
 }));
 
-// Body parsing middleware
+// Body parsing middleware pipeline
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-//STATS middleware
+//STATS middleware pipeline
 
 app.use((req, res, next)=>{
   console.log(`just recieved a : ${req.method} request of url: ${req.url}`);
