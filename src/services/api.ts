@@ -1,11 +1,7 @@
-import {config} from 'dotenv';
-config()
-const NODE_ENV = process.env.NODE_ENV 
-let Url;
-if(NODE_ENV === 'PRODUCTION'){
-  Url = 'https://multimedia-university-fellowship.onrender.com/api'
-}else Url = 'http://localhost/:5000/api'
-const API_BASE_URL = Url;
+const API_BASE_URL =
+  import.meta.env.MODE === "production"
+    ? import.meta.env.VITE_API_BASE_URL
+    : "http://localhost:5000/api";
 
 // Get auth token from localStorage
 const getAuthToken = () => {
