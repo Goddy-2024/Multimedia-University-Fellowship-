@@ -83,7 +83,7 @@ const Dashboard: React.FC = () => {
           className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center space-x-2"
         >
           <Link className="w-4 h-4" />
-          <span>Generate Form</span>
+          <span className='text-[2px] md:text-[20px]'>Generate Form</span>
         </button>
       </div>
 

@@ -119,17 +119,17 @@ const RegistrationForms: React.FC = () => {
         ) : (
           <div className="space-y-4">
             {forms.map((form) => (
-              <div key={form._id} className="border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow">
+              <div key={form._id} className="border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow w-fit">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center space-x-3 mb-2">
                       <h4 className="text-lg font-medium text-gray-900">{form.title}</h4>
                       {getStatusBadge(form)}
                     </div>
-                    
-                    <p className="text-gray-600 text-sm mb-3">{form.description}</p>
-                    
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+
+                    <p className="text-gray-600 text-sm mb-3 flex">{form.description}</p>
+
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                       <div className="flex items-center space-x-2">
                         <Calendar className="w-4 h-4 text-gray-400" />
                         <span className="text-gray-600">
@@ -150,8 +150,8 @@ const RegistrationForms: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                  
-                  <div className="flex items-center space-x-2 ml-4">
+
+                  <div className="flex items-center space-x-2">
                     <button
                       onClick={() => copyToClipboard(form.formUrl, form.formId)}
                       className="p-2 text-gray-400 hover:text-gray-600 transition-colors duration-200"
@@ -162,7 +162,7 @@ const RegistrationForms: React.FC = () => {
                     {copied === form.formId && (
                       <span className="text-xs text-green-600">Copied!</span>
                     )}
-                    
+
                     <a
                       href={form.formUrl}
                       target="_blank"
@@ -172,7 +172,7 @@ const RegistrationForms: React.FC = () => {
                     >
                       <ExternalLink className="w-4 h-4" />
                     </a>
-                    
+
                     {form.isActive && (
                       <button
                         onClick={() => handleDeactivateForm(form.formId)}
@@ -182,7 +182,7 @@ const RegistrationForms: React.FC = () => {
                         <Eye className="w-4 h-4" />
                       </button>
                     )}
-                    
+
                     <button
                       onClick={() => handleDeleteForm(form.formId)}
                       className="p-2 text-gray-400 hover:text-red-600 transition-colors duration-200"

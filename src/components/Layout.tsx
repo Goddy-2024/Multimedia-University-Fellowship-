@@ -90,7 +90,7 @@ const Layout: React.FC<LayoutProps> = ({ children, onLogout }) => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col w-full">
         {/* Top Navbar */}
         <header className="flex items-center justify-between bg-white shadow-md px-6 py-4 md:hidden">
           <button
